@@ -25,8 +25,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Configure apt and install packages
 RUN apt-get update \
     # 
-    # Install ACY and pulseaudio
-    && apt-get -y install acl pulseaudio \
+    # Install ACL, pulseaudio, gnupg
+    && apt-get -y install acl pulseaudio software-properties-common \
     #
     # Create a software group
     && addgroup --gid ${SOFTWARE_GROUP_ID} ${SOFTWARE_GROUP} \
@@ -37,8 +37,20 @@ RUN apt-get update \
     # Create software installation directory
     && mkdir -p ${SOFTWARE_INSTALL_DIR} \
     #
-    # Install common desktop software libraries
-    && apt-get -y install libnss3 libxss1 libgl1 libgtk-3-0 libdbus-glib-1-2 libxt6 libcanberra-gtk-module libcanberra-gtk3-module  \
+    # Install desktop software
+    # Chrome repo
+    && printf "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+    && curl -O https://dl.google.com/linux/linux_signing_key.pub \
+    && apt-key add linux_signing_key.pub \
+    && rm linux_signing_key.pub \
+    # VideoLAN repo
+    && add-apt-repository -y ppa:videolan/master-daily \
+    # Update package info
+    && apt-get update \
+    # chrome
+    && apt-get -y install google-chrome-stable \
+    # vlc
+    && apt-get -y install vlc qtwayland5 libavcodec-extra \
     #
     # Assign software group folder ownership
     && chgrp -R ${SOFTWARE_GROUP} ${SOFTWARE_INSTALL_DIR} \

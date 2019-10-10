@@ -70,6 +70,8 @@ prepare_docker_env_parameters() {
 	ENV_VARS+=" --env=PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native"
 	# DBus unix socket
 	ENV_VARS+=" --env=DBUS_SESSION_BUS_ADDRESS=unix:path=${XDG_RUNTIME_DIR}/bus"
+	# XDG_RUNTIME_DIR
+	ENV_VARS+=" --env=XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}"
 }
 
 prepare_docker_volume_parameters() {
