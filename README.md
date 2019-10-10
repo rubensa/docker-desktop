@@ -3,31 +3,9 @@
 This image provides an Ubuntu environment useful for launching X11 GUI applications.
 This image is based on [rubensa/ubuntu-dev](https://github.com/rubensa/docker-ubuntu-dev).
 
+There is a /software directory where you can downaload and install software.
+
 ## Running
-
-extract_home
-```
-#!/usr/bin/env bash
-
-USER_UID=$(id -u)
-USER_GID=$(id -g)
-
-# Create a temporary container
-docker run -d -it \
-	--name "temporal" \
-	-u $USER_UID:$USER_GID \
-	rubensa/desktop \
-	bash -l
-
-# Copy home to host
-docker cp -a temporal:/home/developer/. ~/desktop/home/
-
-# Stop the temporary container
-docker stop temporal
-
-# Destroy the temporary container
-docker rm temporal
-```
 
 run
 
@@ -81,19 +59,20 @@ prepare_docker_volume_parameters() {
 	VOLUMES+=" --volume=/tmp/.X11-unix:/tmp/.X11-unix"
     # Credentials in cookies used by xauth for authentication of X sessions
 	VOLUMES+=" --volume=${XAUTHORITY}:/tmp/.Xauthority"
+	# XDG_RUNTIME_DIR defines the base directory relative to which user-specific non-essential runtime files and other file objects (such as sockets, named pipes, ...) should be stored.
+	VOLUMES+=" --volume=${XDG_RUNTIME_DIR}:${XDG_RUNTIME_DIR}"
 	# Pulseaudio unix socket
-	VOLUMES+=" --volume=${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse:ro"
+	#VOLUMES+=" --volume=${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse:ro"
 	# DBus
 	# https://github.com/mviereck/x11docker/wiki/How-to-connect-container-to-DBus-from-host
-	VOLUMES+=" --volume=${XDG_RUNTIME_DIR}/bus:${XDG_RUNTIME_DIR}/bus"
+	#VOLUMES+=" --volume=${XDG_RUNTIME_DIR}/bus:${XDG_RUNTIME_DIR}/bus"
 	VOLUMES+=" --volume /run/dbus/system_bus_socket:/run/dbus/system_bus_socket"
 }
 
 prepare_docker_userdata_volumes() {
-	# User home directory
-	VOLUMES+=" --volume=$HOME/desktop/home:/home/developer"
-	# Software directory
-	VOLUMES+=" --volume=$HOME/desktop/software:/software"
+	# User shared working directory
+	[ -d $HOME/desktop/home ] || mkdir -p $HOME/work
+	VOLUMES+=" --volume=$HOME/work:/home/developer/work"
 }
 
 prepare_docker_user_groups() {
@@ -113,7 +92,7 @@ prepare_docker_volume_parameters
 prepare_docker_userdata_volumes
 prepare_docker_user_groups
 
-docker run -d -it \
+docker run -d --restart=always -it \
 	--name "desktop" \
 	${CAPABILITIES} \
 	${SECURITY} \

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+install_path=$SOFTWARE_INSTALL_DIR/$1
+
+if [ -f $install_path ]
+then
+  tmp_dir=$(mktemp -d -t $1-XXXXXXXXXX)
+  [[ -x $install_path ]] || chmod +x $install_path
+  (cd $tmp_dir && $install_path --appimage-extract)
+  $tmp_dir/squashfs-root/AppRun "${@:2}"
+
+  rm -rf $tmp_dir
+else
+  echo "$install_path not found"
+fi
+
