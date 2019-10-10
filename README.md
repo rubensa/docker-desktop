@@ -89,9 +89,9 @@ prepare_docker_volume_parameters() {
 
 prepare_docker_userdata_volumes() {
 	# User home directory
-	VOLUMES+=" --volume=~/desktop/home:/home/developer"
+	VOLUMES+=" --volume=$HOME/desktop/home:/home/developer"
 	# Software directory
-	VOLUMES+=" --volume=~/desktop/software:/software"
+	VOLUMES+=" --volume=$HOME/desktop/software:/software"
 }
 
 prepare_docker_user_groups() {
@@ -136,6 +136,13 @@ stop
 #!/usr/bin/env bash
 
 docker stop "desktop"
+```
+
+start
+```
+#!/usr/bin/env bash
+
+docker start "desktop"
 ```
 
 remove
