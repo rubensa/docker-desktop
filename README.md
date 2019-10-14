@@ -92,7 +92,7 @@ prepare_docker_volume_parameters
 prepare_docker_userdata_volumes
 prepare_docker_user_groups
 
-docker run -d --restart=always -it \
+docker run -d -it \
 	--name "desktop" \
 	${CAPABILITIES} \
 	${SECURITY} \
@@ -131,4 +131,18 @@ remove
 #!/usr/bin/env bash
 
 docker rm "desktop"
+```
+
+~/.config/autostart/run-desktop.desktop
+```
+Desktop Entry]
+Type=Application
+Exec=docker start desktop
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=desktop - docker
+Name=desktop - docker
+Comment[en_US]=
+Comment=
 ```
