@@ -70,9 +70,9 @@ prepare_docker_volume_parameters() {
 }
 
 prepare_docker_userdata_volumes() {
-	# User shared working directory
-	[ -d $HOME/desktop/home ] || mkdir -p $HOME/work
-	VOLUMES+=" --volume=$HOME/work:/home/developer/work"
+    # User shared working directory
+    [ -d $HOME/work ] || mkdir -p $HOME/work
+    VOLUMES+=" --volume=$HOME/work:/work"
 }
 
 prepare_docker_user_groups() {
