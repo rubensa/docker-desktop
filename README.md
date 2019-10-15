@@ -133,9 +133,33 @@ remove
 docker rm "desktop"
 ```
 
+extract
+```
+#!/usr/bin/env bash
+
+USER_UID=$(id -u)
+USER_GID=$(id -g)
+
+# Create a temporary container
+docker run -d -it \
+    --name "temporal" \
+    -u $USER_UID:$USER_GID \
+    rubensa/desktop \
+    bash -l
+
+# Copy home to host
+docker cp -a temporal:/home/developer/. $HOME/desktop/home
+
+# Stop the temporary container
+docker stop temporal
+
+# Destroy the temporary container
+docker rm temporal
+```
+
 ~/.config/autostart/run-desktop.desktop
 ```
-Desktop Entry]
+[Desktop Entry]
 Type=Application
 Exec=docker start desktop
 Hidden=false
