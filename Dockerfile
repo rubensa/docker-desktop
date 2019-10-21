@@ -27,7 +27,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     # 
     # Install software and needed libraries
-    && apt-get -y install acl pulseaudio software-properties-common qtwayland5 libavcodec-extra libcanberra-gtk-module libcanberra-gtk3-module qml-module-qtquick-controls \
+    && apt-get -y install acl pulseaudio software-properties-common qtwayland5 libavcodec-extra libcanberra-gtk-module libcanberra-gtk3-module qml-module-qtquick-controls libgconf-2-4 libxkbfile1 \
     #
     # Give execution permmision to runapp script
     && chmod +x /usr/local/bin/runapp \
@@ -59,7 +59,7 @@ RUN apt-get update \
     && add-apt-repository ppa:deluge-team/ppa \
     #
     # Install software
-    && apt-get -y install firefox thunderbird google-chrome-stable vlc inkscape krita libreoffice deluge \
+    && apt-get -y install firefox thunderbird google-chrome-stable vlc inkscape krita libreoffice deluge filezilla \
     #
     # Create a software group
     && addgroup --gid ${SOFTWARE_GROUP_ID} ${SOFTWARE_GROUP} \
@@ -107,3 +107,7 @@ USER ${DEV_USER}
 
 # Set user home directory (see: https://github.com/microsoft/vscode-remote-release/issues/852)
 ENV HOME /home/$DEV_USER
+
+# Create some user directories
+RUN mkdir -p $HOME/.config \
+    && mkdir -p $HOME/.local/bin

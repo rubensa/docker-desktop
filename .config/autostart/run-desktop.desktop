@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=docker start desktop
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=desktop - docker
+Name=desktop - docker
+Comment[en_US]=
+Comment=
